@@ -1,84 +1,82 @@
-import React, { Component } from 'react'
+import React, { useContext } from 'react'
 import {
   Text,
   View,
   TextInput,
   TouchableOpacity
 } from 'react-native'
+import { Context } from '../../store'
 
 import Colors from '../../constants/Colors'
 import {login} from '../../actions/LoginActions'
 import styles from './styles'
 
-export default class Login extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      email: '',
-      password: ''
-    }
-  }
+const Login = (props) => {
+  const { store, dispatch } = useContext(Context)
 
   handleChangeEmail = (email) => {
-    this.setState({
-      email
+    dispatch({
+      type: 'handleChangeEmail',
+      email: email
     })
   }
   
   handleChangePassword = (password) => {
-    this.setState({
-      password
+    dispatch({
+      type: 'handleChangePassword',
+      password: password
     })
   }
 
   handleLogin = () => {
-    console.log('** handleLogin')
-    const { navigation } = this.props
+    console.log('** handleLogin: ', store)
+    const { navigation } = props
     const credentials = {
-      email: this.state.email,
-      password: this.state.password
+      email: store.email,
+      password: store.password
     }
     login({navigation, credentials})
   }
 
   handleSignUp = () => {
-    this.props.navigation.navigate('SignUp')
+    props.navigation.navigate('SignUp')
   }
 
-  render () {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.logo}>CleanHouse</Text>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.inputText}
-            placeholder='Email...'
-            placeholderTextColor={Colors.darkBlue}
-            onChangeText={this.handleChangeEmail}
-          />
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            secureTextEntry
-            style={styles.inputText}
-            placeholder='Contraseña...'
-            placeholderTextColor={Colors.darkBlue}
-            onChangeText={this.handleChangePassword}
-          />
-        </View>
-        <TouchableOpacity>
-          <Text style={styles.forgot}>¿Olvidaste tu contraseña?</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.loginBtn}
-          onPress={this.handleLogin}
-        >
-          <Text style={styles.loginText}>Iniciar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this.handleSignUp}>
-          <Text style={styles.loginText}>Registrar</Text>
-        </TouchableOpacity>
+  
+  return (
+    <View style={styles.container}>
+      <Text style={styles.logo}>CleanHouse</Text>
+      <View style={styles.inputView}>
+        <TextInput
+          style={styles.inputText}
+          placeholder='Email...'
+          placeholderTextColor={Colors.darkBlue}
+          onChangeText={handleChangeEmail}
+        />
       </View>
-    )
-  }
+      <View style={styles.inputView}>
+        <TextInput
+          secureTextEntry
+          style={styles.inputText}
+          placeholder='Contraseña...'
+          placeholderTextColor={Colors.darkBlue}
+          onChangeText={handleChangePassword}
+        />
+      </View>
+      <TouchableOpacity>
+        <Text style={styles.forgot}>¿Olvidaste tu contraseña?</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.loginBtn}
+        onPress={handleLogin}
+      >
+        <Text style={styles.loginText}>Iniciar</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleSignUp}>
+        <Text style={styles.loginText}>Registrar</Text>
+      </TouchableOpacity>
+    </View>
+  )
 }
+
+export default Login

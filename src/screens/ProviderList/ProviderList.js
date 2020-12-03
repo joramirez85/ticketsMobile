@@ -1,8 +1,9 @@
-import React, {Component} from 'react'
-import { SafeAreaView, View, FlatList, StyleSheet, Text } from 'react-native'
+import React, { useContext, useEffect } from 'react'
+import { SafeAreaView, FlatList } from 'react-native'
 
 import styles from './styles'
 import RenderItem from '../../components/ProviderItems/ProviderItems'
+import { Context } from '../../store'
 
 const list = [
   {
@@ -19,37 +20,31 @@ const list = [
   },
 ]
 
-export default class ProviderList extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      data: ''
-    }
-  }
+const ProviderList = (props) => {
+  const { store, dispatch } = useContext(Context)
 
-  componentDidMount() {
-    this.setState({
-      data: list
+  useEffect(() => {
+    console.log('** user: ', store.email)
+    dispatch({
+      type: 'setProviders',
+      providers: list
     })
-  }
-
-  render () {
-    return (
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          data={this.state.data}
-          renderItem={item => (
-            <RenderItem 
-              item={item}
-              navigation={this.props.navigation}
-            />
-          )}
-          keyExtractor={item => item.id}
-        />
-      </SafeAreaView>
-    )
-  }
+  }, [])
+  
+  return (
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={store.providers}
+        renderItem={item => (
+          <RenderItem 
+            item={item}
+            navigation={props.navigation}
+          />
+        )}
+        keyExtractor={item => item.id}
+      />
+    </SafeAreaView>
+  )
 }
 
-
-
+export default ProviderList
